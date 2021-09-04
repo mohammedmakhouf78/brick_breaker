@@ -1,3 +1,9 @@
+#app{
+    /* display: none; */
+}
+
+
+
 
 .player ,#temp-player{
     width: 30px;
@@ -27,6 +33,22 @@
     right: 30px;
     display: none;
 }
+
+#play-again{
+    padding: 0.5em 2em;
+    border-radius: 10px;
+    color: white;
+    background-color: #f14e4e;
+    border: none;
+    font-size: 1.2em;
+    cursor: pointer;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translateX(-50%) translateY(-50%);
+    display: none;
+}
+
 
 #score-div,#lives-div{
     color: #17BEBB;

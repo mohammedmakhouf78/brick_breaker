@@ -1,3 +1,4 @@
+let app = document.getElementById('app')
 let player = document.getElementsByClassName('player')[0]
 let playerBar = document.getElementById('player-bar')
 let enemyContainer = document.getElementById('objs')
@@ -7,6 +8,7 @@ let tempPlayer = document.getElementById('temp-player')
 let continueButton = document.getElementById('continue-btn')
 let scoreSpan = document.getElementById('score')
 let liveSpan = document.getElementById('lives')
+let playAgainbutton = document.getElementById('play-again')
 let screenWidth = document.body.clientWidth
 let screenHeight = screen.height
 let gameIsPlaying = true
@@ -21,8 +23,10 @@ let PlayerRect;
 let ballSpeed = 0.1
 let score = 0
 let lives = 10
+
 document.onkeydown = keyCheck
 addEnemys()
+
 for (let item of document.getElementsByClassName('player')) {
     PlayerRect = item.getBoundingClientRect()
 }
@@ -32,6 +36,7 @@ if (gameIsPlaying) {
         checkIfOutOfBoundries()
         movePlayerBall()
         playerDied()
+        gameEnded()
     }, 1)
 }
 
@@ -87,43 +92,22 @@ function checkIfOutOfBoundries() {
 }
 
 function playerDied() {
-    // let playerPosition;
-    // for (let item of document.getElementsByClassName('player')) {
-    //     playerPosition = getPositionAtCenter(item)
-    // }
     let playerPosition;
     for (let item of document.getElementsByClassName('player')) {
         playerPosition = item.getBoundingClientRect()
     }
 
     let barPosition = playerBar.getBoundingClientRect()
-    // let barPosition = getPositionAtCenter(playerBar)
-
-    // let distance = Math.hypot(playerPosition.x - barPosition.x, playerPosition.y - barPosition.y)
-    // if (((barPosition.left < playerPosition.left) && (barPosition.left + 200 >= playerPosition.left)) && barPosition.bottom == playerPosition.bottom) {
-    //     moveBottom *= -1
-    // }
-
     
     if(isCollide(playerPosition,barPosition)){
         moveBottom *= -1
     }
 
 
-    // console.log(`player x : ${playerPosition.x}  and bar x : ${barPosition.x}` )
-
-
-    // if(distance <= 50){
-    //     console.log('toutch')
-    //     moveBottom *= -1
-    // }
-
     if (startBottom <= 0) {
         continueButton.style.display = "initial"
         startLeft = 500
         startBottom = 200
-        // moveBottom = 1
-        // moveLeft = 1
         player.style.display = "none"
         tempPlayer.style.display = "initial"
         tempPlayer.style.bottom = `${startBottom}px`
@@ -135,15 +119,6 @@ function playerDied() {
         }
 
         gameIsPlaying =false
-        
-        // setTimeout(() => {
-        //     startLeft = 300
-        //     startBottom = 500
-        //     player.style.display = "initial"
-        //     tempPlayer.style.display = "none"
-        //     player.style.bottom = `${startBottom}px`
-        //     player.style.left = `${startLeft}px`
-        // }, 3000);
     }
 
 
@@ -226,4 +201,65 @@ function resumePlaying(){
     continueButton.style.display = "none"
 
     gameIsPlaying = true
+}
+
+function gameEnded(){
+    if (lives <= 0){
+        gameIsPlaying = false
+        app.style.display = 'none'
+        playAgainbutton.style.display = 'initial'
+    }
+}
+
+function playAgain(){
+    gameIsPlaying = true
+    app.style.display = 'initial'
+    app = document.getElementById('app')
+    player = document.getElementsByClassName('player')[0]
+    playerBar = document.getElementById('player-bar')
+    enemyContainer = document.getElementById('objs')
+    enemy = document.getElementsByClassName('obj')[0]
+    enemies = document.getElementsByClassName('obj')
+    tempPlayer = document.getElementById('temp-player')
+    continueButton = document.getElementById('continue-btn')
+    scoreSpan = document.getElementById('score')
+    liveSpan = document.getElementById('lives')
+    screenWidth = document.body.clientWidth
+    screenHeight = screen.height
+    gameIsPlaying = true
+    startLeft = Math.floor(Math.random() * screenWidth)
+    startBottom = 30
+    moveLeft = 1
+    moveBottom = 1
+    barStartLeft = 0
+    barMoveleft = 15
+    enemyPosition = 15
+    PlayerRect;
+    ballSpeed = 0.1
+    score = 0
+    lives = 10
+
+    scoreSpan.innerHTML = score
+    liveSpan.innerHTML = lives
+
+    enemyContainer.innerHTML = '<div class="obj"></div>'
+    
+    enemy.className = 'obj'
+    addEnemys()
+    checkToIncreaseSpeed()
+
+    for (let item of document.getElementsByClassName('player')) {
+        PlayerRect = item.getBoundingClientRect()
+    }
+    
+    if (gameIsPlaying) {
+        setInterval((e) => {
+            checkIfOutOfBoundries()
+            movePlayerBall()
+            playerDied()
+            gameEnded()
+        }, 1)
+    }
+
+    playAgainbutton.style.display = "none"
 }
